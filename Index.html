@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kleo Bank - Ruimte Financiën</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Exo+2:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: linear-gradient(135deg, #000428, #004e92, #000);
+      color: white;
+      min-height: 100vh;
+      padding-bottom: 120px;
+      overflow-x: hidden;
+      position: relative;
+      animation: spaceBackground 30s infinite linear;
+    }
+
+    @keyframes spaceBackground {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(ellipse at center, rgba(162, 89, 255, 0.1) 0%, rgba(0,0,0,0) 70%),
+        radial-gradient(ellipse at 70% 20%, rgba(0, 255, 255, 0.1) 0%, rgba(0,0,0,0) 70%),
+        radial-gradient(ellipse at 20% 80%, rgba(255, 0, 255, 0.1) 0%, rgba(0,0,0,0) 70%);
+      z-index: -1;
+      animation: nebulaPulse 15s infinite alternate;
+    }
+
+    @keyframes nebulaPulse {
+      0% { opacity: 0.3; }
+      100% { opacity: 0.6; }
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .star {
+      position: absolute;
+      background-color: white;
+      border-radius: 50%;
+      animation: twinkle var(--duration) infinite ease-in-out;
+      opacity: var(--opacity);
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--opacity); }
+      50% { opacity: calc(var(--opacity) * 0.3); }
+    }
+
+    header {
+      padding: 40px 20px 20px;
+      text-align: center;
+      background: rgba(10, 0, 24, 0.85);
+      box-shadow: 0 4px 20px rgba(162, 89, 255, 0.6);
+      border-bottom: 2px solid #a259ff;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
+      animation: rainbowBorder 4s linear infinite;
+    }
+
+    @keyframes rainbowBorder {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 300% 50%; }
+    }
+
+    .logo {
+      font-size: 2.8em;
+      background: linear-gradient(270deg, #ff00ff, #00ffff, #ff00ff);
+      background-size: 600% 600%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbowText 8s ease infinite;
+      letter-spacing: 2px;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(162, 89, 255, 0.7);
+    }
+
+    @keyframes rainbowText {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .banner {
+      background: linear-gradient(90deg, rgba(162, 89, 255, 0.15), rgba(0, 195, 255, 0.15));
+      border: 1px solid rgba(162, 89, 255, 0.5);
+      padding: 20px;
+      margin: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(162, 89, 255, 0.4);
+      text-align: center;
+      backdrop-filter: blur(8px);
+      animation: floatBanner 6s infinite ease-in-out;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    @keyframes floatBanner {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .banner::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      opacity: 0.3;
+      z-index: -1;
+    }
+
+    .banner h3 {
+      font-size: 1.4em;
+      margin-bottom: 5px;
+      text-shadow: 0 0 8px rgba(255,255,255,0.5);
+      color: #f0f0ff;
+    }
+
+    .banner p {
+      font-size: 0.95em;
+      color: #d0d0ff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(20, 10, 40, 0.6);
+      padding: 18px;
+      border-radius: 15px;
+      border: 1px solid rgba(162, 89, 255, 0.4);
+      box-shadow: 0 0 15px rgba(162, 89, 255, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(8px);
+      overflow-wrap: break-word;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 0 25px rgba(162, 89, 255, 0.6);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff00ff, #00ffff);
+      z-index: 2;
+    }
+
+    .card h4 {
+      margin-bottom: 10px;
+      font-size: 0.95em;
+      color: #e0e0ff;
+      text-shadow: 0 0 5px rgba(162, 89, 255, 0.5);
+      letter-spacing: 0.5px;
+    }
+
+    .card .amount {
+      font-size: 1.4em;
+      font-weight: bold;
+      background: linear-gradient(270deg, #ff00ff, #00ffff, #ff00ff);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbowText 8s ease infinite;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      padding: 14px 0;
+      background: rgba(15, 0, 35, 0.85);
+      position: fixed;
+      bottom: 60px;
+      width: 100%;
+      font-size: 0.8em;
+      color: #ccc;
+      border-top: 1px solid rgba(162, 89, 255, 0.3);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      box-shadow: 0 -2px 15px rgba(0,0,0,0.3);
+    }
+
+    .tabs div {
+      padding: 8px 12px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .tabs div::after {
+      content: "";
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #ff00ff, #00ffff);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    .tabs div:hover, .tabs div.active {
+      color: #fff;
+      text-shadow: 0 0 10px rgba(162, 89, 255, 0.7);
+    }
+
+    .tabs div:hover::after, .tabs div.active::after {
+      width: 80%;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-around;
+      padding: 22px 0;
+      background: rgba(10, 0, 25, 0.9);
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      box-shadow: 0 -2px 15px rgba(0,0,0,0.5);
+      border-top: 1px solid rgba(162, 89, 255, 0.3);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    .action-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #d0d0ff;
+      font-size: 0.85em;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: rgba(162, 89, 255, 0.1);
+      min-width: 80px;
+    }
+
+    .action-button:hover {
+      color: #fff;
+      background: rgba(162, 89, 255, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(162, 89, 255, 0.4);
+      cursor: pointer;
+    }
+
+    .action-button i {
+      font-size: 1.6em;
+      margin-bottom: 8px;
+      text-shadow: 0 0 8px rgba(255,255,255,0.5);
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .action-button:hover i {
+      transform: scale(1.2);
+      text-shadow: 0 0 12px rgba(162, 89, 255, 0.8);
+    }
+
+    .action-button div {
+      font-weight: 500;
+    }
+
+    .floating-planet {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #6a11cb, #2575fc);
+      box-shadow: 0 0 40px rgba(106, 17, 203, 0.6);
+      top: 20%;
+      right: -40px;
+      z-index: -1;
+      animation: floatPlanet 15s infinite ease-in-out;
+      opacity: 0.7;
+    }
+
+    .floating-moon {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #d9d9d9, #8c8c8c);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+      bottom: 30%;
+      left: -30px;
+      z-index: -1;
+      animation: floatMoon 12s infinite ease-in-out;
+      opacity: 0.7;
+    }
+
+    @keyframes floatPlanet {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(-20px, -20px) rotate(5deg); }
+      50% { transform: translate(-40px, 0) rotate(0deg); }
+      75% { transform: translate(-20px, 20px) rotate(-5deg); }
+    }
+
+    @keyframes floatMoon {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(20px, -15px) rotate(3deg); }
+      50% { transform: translate(40px, 0) rotate(0deg); }
+      75% { transform: translate(20px, 15px) rotate(-3deg); }
+    }
+
+    .comet {
+      position: absolute;
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.8));
+      border-radius: 50%;
+      filter: blur(1px);
+      animation: cometFly 20s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes cometFly {
+      0% { 
+        transform: translate(-100px, -100px) rotate(45deg); 
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      100% { 
+        transform: translate(100vw, 100vh) rotate(45deg); 
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .logo { font-size: 2.2em; }
+      .card .amount { font-size: 1.2em; }
+      .action-button { min-width: 70px; padding: 6px 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stars" id="stars-container"></div>
+  <div class="comet" style="top: 20%; left: 10%; animation-delay: -5s;"></div>
+  <div class="comet" style="top: 60%; left: 30%; animation-delay: -12s; animation-duration: 25s;"></div>
+  <div class="floating-planet"></div>
+  <div class="floating-moon"></div>
+
+  <header>
+    <div class="logo">KLEO</div>
+  </header>
+
+  <div class="banner">
+    <h3>💎 Verdien beloningen – claim je eerste bonus</h3>
+    <p>Gebruik Kleo actief en verzamel punten</p>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h4>Passen</h4>
+      <div class="amount">💳 Mastercard Rainbow</div>
+    </div>
+    <div class="card">
+      <h4>Totaalsaldo</h4>
+      <div class="amount">€ 2.388,29</div>
+    </div>
+    <div class="card">
+      <h4>Hoofdrekening</h4>
+      <div class="amount">€ 388,29</div>
+    </div>
+    <div class="card">
+      <h4>Spaarrekening</h4>
+      <div class="amount">€ 800,00</div>
+    </div>
+    <div class="card">
+      <h4>Zakgeld Indonesië</h4>
+      <div class="amount">€ 1.200,00</div>
+    </div>
+    <div class="card">
+      <h4>Actieve kaart</h4>
+      <div class="amount">**** 9311</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="active">Home</div>
+    <div>Reizen</div>
+    <div>Budgetteren</div>
+    <div>Stocks</div>
+    <div>Crypto</div>
+  </div>
+
+  <div class="actions">
+    <div class="action-button">
+      <i>⬆️</i>
+      <div>Betaal</div>
+    </div>
+    <div class="action-button">
+      <i>⬇️</i>
+      <div>Verzoek</div>
+    </div>
+    <div class="action-button">
+      <i>➕</i>
+      <div>Voeg toe</div>
+    </div>
+  </div>
+
+  <script>
+    // Create dynamic stars
+    const starsContainer = document.getElementById('stars-container');
+    const starCount = 150;
+    
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      
+      // Random properties for stars
+      const size = Math.random() * 2 + 1;
+      const opacity = Math.random() * 0.8 + 0.1;
+      const duration = Math.random() * 5 + 3;
+      
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.setProperty('--opacity', opacity);
+      star.style.setProperty('--duration', `${duration}s`);
+      star.style.animationDelay = `${Math.random() * 5}s`;
+      
+      starsContainer.appendChild(star);
+    }
+    
+    // Floating effect for banner
+    const banner = document.querySelector('.banner');
+    banner.addEventListener('mouseenter', () => {
+      banner.style.animationPlayState = 'paused';
+    });
+    
+    banner.addEventListener('mouseleave', () => {
+      banner.style.animationPlayState = 'running';
+    });
+    
+    // Tab interaction
+    const tabs = document.querySelectorAll('.tabs div');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        tabs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
